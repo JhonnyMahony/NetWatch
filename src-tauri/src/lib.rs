@@ -1,9 +1,9 @@
 use std::{
-    collections::{HashMap, VecDeque},
+    collections::VecDeque,
     net::IpAddr,
-    sync::{Arc, Mutex},
+    sync::Mutex,
     thread::{self, sleep},
-    time::{self, Duration},
+    time::Duration,
 };
 
 use logic::{
@@ -19,7 +19,7 @@ use pnet::packet::{
 };
 use serde::{Deserialize, Serialize};
 use std::sync::atomic::{AtomicBool, Ordering};
-use tauri::{Emitter, Manager};
+use tauri::Manager;
 
 mod logic;
 
@@ -39,8 +39,7 @@ fn get_interfaces() -> Vec<String> {
 
 #[tauri::command]
 fn start_watch(app_handle: tauri::AppHandle, interface: String) {
-    println!("{}", interface);
-    println!("watch started");
+    log::info!("start watch");
     if let Some(running) = app_handle.try_state::<AtomicBool>() {
         running.store(true, Ordering::SeqCst);
     }
@@ -49,7 +48,7 @@ fn start_watch(app_handle: tauri::AppHandle, interface: String) {
     }
 
     let interface = get_interface(interface);
-    println!("listen on: {}", interface.name);
+    log::info!("listen on: {}", interface.name);
 
     thread::spawn(move || {
         let mut count_fp = 0;
@@ -105,6 +104,7 @@ fn start_watch(app_handle: tauri::AppHandle, interface: String) {
 
 #[tauri::command]
 fn stop_watch(app_handle: tauri::AppHandle) {
+    log::info!("stoped watch");
     if let Some(running) = app_handle.try_state::<AtomicBool>() {
         running.store(false, Ordering::SeqCst);
     }
@@ -116,6 +116,7 @@ fn get_packets(
     protocol: String,
     ip: String,
 ) -> VecDeque<FormatedPacket> {
+    log::info!("filtered protocol: {}, ip: {}", protocol, ip);
     if let Some(packets) = app_handle.try_state::<Mutex<VecDeque<FormatedPacket>>>() {
         let locked_packets = match packets.lock() {
             Ok(guard) => guard,

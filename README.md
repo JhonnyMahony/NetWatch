@@ -1,6 +1,6 @@
-# NetWatch Template
+# NetWatch
 
-This project helps you watch network trafic, filter by protocol and import export data using [Tauri](https://tauri.app/) and [Yew](https://yew.rs/). It provides a foundation for building lightweight, secure apps with a Rust backend and a web-based frontend.
+This project helps you watch network trafic, filter by protocol, ip using [Tauri](https://tauri.app/) and [Yew](https://yew.rs/). It provides a foundation for building lightweight, secure apps with a Rust backend and a web-based frontend.
 
 ## Getting Started
 
@@ -15,23 +15,17 @@ This project helps you watch network trafic, filter by protocol and import expor
 |-----------------------|-------------------------------------------------|
 | Clone Repository      | `git clone https://github.com/JhonnyMahony/NetWatch.git` |
 | Navigate to Directory | `cd NetWatch`                                   |
-| Install Dependencies  | `cargo install tauri-bundler` and `yarn install`|
+| Install Dependencies  | `cargo install tauri-cli` 
 
 ## Running the Project
 
-- **Development Mode**: Run `yarn dev` to start the app in development mode with hot reloading.
+- **Development Mode**: Run `cargo tauri dev` to start the app in development mode with hot reloading.
 - **Runtime**: After building, the app runs on Windows, macOS, or Linux, depending on your platform.
 
 ## Building the Application
 
-- Run `yarn build` to create a release build.
+- Run `cargo tauri build` to create a release build.
 - Find the executable in the `target/release` directory (e.g., `.exe` for Windows, `.app` for macOS).
-
-## Customizing the Template
-
-- **Frontend**: Modify Yew components in the `src/web` directory.
-- **Backend**: Adjust Rust logic in the `src/tauri` directory.
-- **Configuration**: Edit `tauri.conf.json` for app settings and `package.json` for scripts.
 
 ## Contributing
 
