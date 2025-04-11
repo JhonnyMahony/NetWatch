@@ -8,6 +8,7 @@ pub mod theme;
 pub struct AppContext {
     pub theme: UseReducerHandle<ThemeState>,
     pub theme_cycle: Vec<&'static str>,
+
     pub interfaces: UseStateHandle<Vec<String>>,
     pub interface: UseStateHandle<String>,
 }
@@ -21,6 +22,7 @@ pub struct AuthProviderProps {
 pub fn AppProvider(props: &AuthProviderProps) -> Html {
     let theme: UseReducerHandle<ThemeState> = use_theme_context();
     let theme_cycle: Vec<&str> = vec!["light", "dark"];
+
     let interfaces = use_state(|| vec!["any".to_string()]);
     let interface = use_state(|| String::from("any"));
 

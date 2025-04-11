@@ -16,9 +16,9 @@ use pnet::packet::{
     udp::UdpPacket,
     Packet,
 };
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Serialize)]
+#[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct FormatedPacket {
     pub number: u32,
     pub time: String,
@@ -30,7 +30,7 @@ pub struct FormatedPacket {
     pub detailed_info: Option<DetailedInfo>,
 }
 
-#[derive(Clone, Serialize)]
+#[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct DetailedInfo {
     pub interface: String,
     pub src_mac: String,
@@ -225,27 +225,6 @@ fn process_icmpv6_packet(payload: &[u8]) -> Option<String> {
     None
 }
 
-fn get_icmp_type(t: IcmpType) -> String {
-    todo!()
-}
-
-fn get_icmpv6_type(t: Icmpv6Type) -> String {
-    match t {
-        Icmpv6Types::Redirect => "Redirect".to_string(),
-        Icmpv6Types::EchoReply => "Echo reply".to_string(),
-        Icmpv6Types::EchoRequest => "Echo request".to_string(),
-        Icmpv6Types::PacketTooBig => "Packet too big".to_string(),
-        Icmpv6Types::RouterAdvert => "Rouder advert".to_string(),
-        Icmpv6Types::TimeExceeded => "Time exceeded".to_string(),
-        Icmpv6Types::RouterSolicit => "Router solicit".to_string(),
-        Icmpv6Types::NeighborAdvert => "Router advert".to_string(),
-        Icmpv6Types::NeighborSolicit => "Neighbor solicit".to_string(),
-        Icmpv6Types::ParameterProblem => "Parameter problem".to_string(),
-        Icmpv6Types::DestinationUnreachable => "Destination unreachable".to_string(),
-        _ => "Unknown icmpv6".to_string(),
-    }
-}
-
 fn get_tcp_flags(tcp: &TcpPacket) -> String {
     let flags = tcp.get_flags();
     let flag_names = [
@@ -262,60 +241,4 @@ fn get_tcp_flags(tcp: &TcpPacket) -> String {
         .filter_map(|&(flag, name)| (flags & flag != 0).then(|| name))
         .collect::<Vec<_>>()
         .join("|")
-}
-fn parse_dns_packet(payload: &[u8]) -> String {
-    if let Ok(dns) = dns_parser::Packet::parse(payload) {
-        let mut results = Vec::new();
-
-        if !dns.questions.is_empty() {
-            results.extend(
-                dns.questions
-                    .iter()
-                    .map(|q| format!("🌍 DNS Domain: {}; ", q.qname)),
-            );
-        }
-
-        if !dns.answers.is_empty() {
-            results.extend(dns.answers.iter().map(|ans| match &ans.data {
-                dns_parser::rdata::RData::A(a) => {
-                    format!("✅ DNS A Record: {} -> {:?}", ans.name, a)
-                }
-                dns_parser::rdata::RData::AAAA(aaaa) => {
-                    format!("✅ DNS AAAA Record: {} -> {:?}", ans.name, aaaa)
-                }
-                dns_parser::rdata::RData::CNAME(cname) => {
-                    format!("✅ DNS CNAME Record: {} -> {:?}", ans.name, cname)
-                }
-                dns_parser::rdata::RData::MX(mx) => {
-                    format!("✅ DNS MX Record: {} -> {:?}", ans.name, mx)
-                }
-                dns_parser::rdata::RData::NS(ns) => {
-                    format!("✅ DNS NS Record: {} -> {:?}", ans.name, ns)
-                }
-                dns_parser::rdata::RData::PTR(ptr) => {
-                    format!("✅ DNS PTR Record: {} -> {:?}", ans.name, ptr)
-                }
-                dns_parser::rdata::RData::SOA(soa) => {
-                    format!("✅ DNS SOA Record: {} -> {:?}", ans.name, soa)
-                }
-                dns_parser::rdata::RData::SRV(srv) => {
-                    format!("✅ DNS SRV Record: {} -> {:?}", ans.name, srv)
-                }
-                dns_parser::rdata::RData::TXT(txt) => {
-                    format!("✅ DNS TXT Record: {} -> {:?}", ans.name, txt)
-                }
-                dns_parser::rdata::RData::Unknown(unknown) => {
-                    format!("❓ Unknown DNS Record: {} -> {:?}", ans.name, unknown)
-                }
-            }));
-        }
-
-        if results.is_empty() {
-            "ℹ️ No DNS questions or answers found".to_string()
-        } else {
-            results.join("\n")
-        }
-    } else {
-        String::new()
-    }
 }

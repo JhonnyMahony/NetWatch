@@ -1,3 +1,4 @@
+mod errors;
 mod ui;
 
 use ui::app::Watch;
