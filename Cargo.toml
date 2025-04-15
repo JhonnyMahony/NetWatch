@@ -1,0 +1,37 @@
+[package]
+name = "netwatch-ui"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[dependencies]
+yew = { version = "0.21", features = ["csr"] }
+wasm-bindgen = "0.2"
+wasm-bindgen-futures = "0.4"
+web-sys = { version = "0.3.60", features = [
+    "HtmlInputElement",
+    "HtmlFormElement",
+    "HtmlSelectElement",
+    "HtmlOptionElement",
+    "HtmlTextAreaElement",
+    "Navigator", "MediaQueryList",
+] }
+js-sys = "0.3"
+serde = { version = "1", features = ["derive"] }
+serde-wasm-bindgen = "0.6"
+console_error_panic_hook = "0.1.7"
+log="0.4.0"
+yew-hooks="0.3.3" 
+gloo-storage = "0.2.2"
+gloo = "0.11.0"
+serde_json = "=1"
+thiserror="2.0.12"
+uuid = { version = "1.16", features = ["v4", "js"] }
+
+
+
+
+
+
+[workspace]
+members = ["src-tauri"]
