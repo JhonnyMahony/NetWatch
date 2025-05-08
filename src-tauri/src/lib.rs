@@ -9,6 +9,7 @@ mod api;
 mod errors;
 mod logic;
 
+use api::ai::dos_detect;
 use api::import_export::{export_packets, import_packets};
 use api::packets::{get_interfaces, get_packets, start_watch, stop_watch};
 
@@ -27,7 +28,9 @@ pub fn run() {
             get_packets,
             //import_export
             import_packets,
-            export_packets
+            export_packets,
+            //ai
+            dos_detect
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

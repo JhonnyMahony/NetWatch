@@ -28,6 +28,8 @@ pub struct FormatedPacket {
     pub lenght: usize,
     pub info: String,
     pub detailed_info: Option<DetailedInfo>,
+    #[serde(skip)]
+    pub timestamp: f64,
 }
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
@@ -52,6 +54,8 @@ impl FormatedPacket {
     ) -> Self {
         let now = Local::now();
         let time = now.time().format("%H:%M:%S").to_string();
+        let timestamp = now.timestamp() as f64 + now.timestamp_subsec_nanos() as f64 / 1e9;
+
         Self {
             number,
             time,
@@ -61,6 +65,7 @@ impl FormatedPacket {
             protocol,
             info,
             detailed_info: None,
+            timestamp,
         }
     }
 }
